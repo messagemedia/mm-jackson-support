@@ -1,5 +1,7 @@
 # MessageMedia Utility Classes for Jackson (Java JSON lib)
 
+[![Build Status](https://travis-ci.org/messagemedia/mm-jackson-support.svg?branch=master)](https://travis-ci.org/messagemedia/mm-jackson-support)
+
 This repo contains utility/helper classes for Jackson.
 
 ## Currently it contains the following modules:
