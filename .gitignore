@@ -1,0 +1,10 @@
+target
+.idea
+*.iml
+.project
+.settings
+.classpath
+.pmd
+.pmdruleset.xml
+.checkstyle
+*.swp

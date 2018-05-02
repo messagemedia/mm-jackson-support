@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright 2018 MessageMedia Group
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  ~ @file
+  ~ @copyright 2018 MessageMedia Group
+  ~ @license https://www.apache.org/licenses/LICENSE-2.0
+  ~ @see https://messagemedia.github.io/
+  ~
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <groupId>com.messagemedia.framework.jackson</groupId>
+    <artifactId>jackson-support-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>MessageMedia</name>
+        <url>https://developers.messagemedia.com/</url>
+    </organization>
+
+    <prerequisites>
+        <maven>3.2.5</maven>
+    </prerequisites>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <coverage.line.ratio>0.90</coverage.line.ratio>
+    </properties>
+
+
+    <modules>
+        <module>jackson-support-core</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.7.0</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                        <showDeprecation>true</showDeprecation>
+                        <compilerId>javac</compilerId>
+                        <compilerArgs>
+                            <compilerArg>-Xlint:all,-serial</compilerArg>
+                            <compilerArg>-parameters</compilerArg>
+                            <compilerArg>-Werror</compilerArg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.19.1</version>
+                    <configuration>
+                        <!-- Include set arglines such as jacoco -->
+                        <!--suppress MavenModelInspection -->
+                        <argLine>${argLine} -noverify -Dfile.encoding=UTF-8</argLine>
+                        <includes>
+                            <include>%regex[.*[Ss]pec.*class]</include>
+                            <include>%regex[.*[Tt]est.*class]</include>
+                        </includes>
+                        <excludes>
+                            <exclude>%regex[.*IT.*class]</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <effort>Max</effort>
+                        <threshold>Low</threshold>
+                        <xmlOutput>true</xmlOutput>
+                        <failOnError>true</failOnError>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.0.0-M1</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-versions</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>[3.3.1,)</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>[1.8.0-77,)</version>
+                                    </requireJavaVersion>
+                                    <DependencyConvergence/>
+                                    <bannedDependencies>
+                                        <searchTransitive>true</searchTransitive>
+                                    </bannedDependencies>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>true</failsOnError>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>validate-project-classes</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <configLocation>
+                                    config/checkstyle.xml
+                                </configLocation>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>validate-test-classes</id>
+                            <phase>process-test-classes</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDirectories>none</sourceDirectories>
+                                <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                                <configLocation>
+                                    config/checkstyle-test.xml
+                                </configLocation>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.5</version>
+                    <configuration>
+                        <printFailingErrors>true</printFailingErrors>
+                        <includeTests>true</includeTests>
+                        <rulesets>
+                            <ruleset>${maven.multiModuleProjectDirectory}/config/pmd.xml</ruleset>
+                            <ruleset>${maven.multiModuleProjectDirectory}/config/pmd-test.xml</ruleset>
+                        </rulesets>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>check-unused-code</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.5.201505241946</version>
+                    <executions>
+                        <execution>
+                            <id>default-prepare-agent</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-report</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-check</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>package</phase>
+                            <!-- Configuration is here to make it easier to override though use the properties first. -->
+                            <configuration>
+                                <rules>
+                                    <rule implementation="org.jacoco.maven.RuleConfiguration">
+                                        <element>CLASS</element>
+                                        <limits>
+                                            <limit implementation="org.jacoco.report.check.Limit">
+                                                <counter>LINE</counter>
+                                                <value>COVEREDRATIO</value>
+                                                <minimum>${coverage.line.ratio}</minimum>
+                                            </limit>
+                                        </limits>
+                                    </rule>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>2.3</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+
+    <profiles>
+        <profile>
+            <id>fast-build</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <enforcer.skip>true</enforcer.skip>
+                <jacoco.skip>true</jacoco.skip>
+                <pmd.skip>true</pmd.skip>
+                <skipTests>true</skipTests>
+                <findbugs.skip>true</findbugs.skip>
+            </properties>
+        </profile>
+    </profiles>
+
+
+</project>
