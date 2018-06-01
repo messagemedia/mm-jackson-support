@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This class can be used when you want to distinguish between an explicit null and no value given. This useful if you want to implement a patch
@@ -113,6 +114,14 @@ public final class ValueWithNull<T> {
      */
     public T get() {
         return value;
+    }
+
+    /**
+     *
+     * @return Optionally wrapped underlying value.
+     */
+    public Optional<T> getOpt() {
+        return Optional.ofNullable(value);
     }
 
     @Override
