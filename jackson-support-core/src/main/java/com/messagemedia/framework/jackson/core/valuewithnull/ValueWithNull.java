@@ -120,7 +120,7 @@ public final class ValueWithNull<T> {
      *
      * @return Optionally wrapped underlying value.
      */
-    public Optional<T> getOpt() {
+    public Optional<T> toOptional() {
         return Optional.ofNullable(value);
     }
 

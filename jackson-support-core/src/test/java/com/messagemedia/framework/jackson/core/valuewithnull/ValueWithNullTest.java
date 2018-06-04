@@ -280,12 +280,12 @@ public class ValueWithNullTest {
         assertEquals("{}", objectMapper.writeValueAsString(create.get()));
         IMyClass<T> explicitNull = create.get();
         explicitNull.setMyValue(ValueWithNull.explicitNull());
-        assertFalse(explicitNull.getMyValue().getOpt().isPresent());
+        assertFalse(explicitNull.getMyValue().toOptional().isPresent());
         assertEquals("{\"myValue\":null}", objectMapper.writeValueAsString(explicitNull));
 
         IMyClass<T> realValue = create.get();
         realValue.setMyValue(ValueWithNull.of(sampleValue));
-        assertTrue(realValue.getMyValue().getOpt().isPresent());
+        assertTrue(realValue.getMyValue().toOptional().isPresent());
         assertEquals(String.format("{\"myValue\":%s}", jsonString), objectMapper.writeValueAsString(realValue));
     }
 
