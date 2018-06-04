@@ -50,6 +50,7 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(DataProviderRunner.class)
 public class ValueWithNullTest {
@@ -279,10 +280,12 @@ public class ValueWithNullTest {
         assertEquals("{}", objectMapper.writeValueAsString(create.get()));
         IMyClass<T> explicitNull = create.get();
         explicitNull.setMyValue(ValueWithNull.explicitNull());
+        assertFalse(explicitNull.getMyValue().toOptional().isPresent());
         assertEquals("{\"myValue\":null}", objectMapper.writeValueAsString(explicitNull));
 
         IMyClass<T> realValue = create.get();
         realValue.setMyValue(ValueWithNull.of(sampleValue));
+        assertTrue(realValue.getMyValue().toOptional().isPresent());
         assertEquals(String.format("{\"myValue\":%s}", jsonString), objectMapper.writeValueAsString(realValue));
     }
 
@@ -308,10 +311,10 @@ public class ValueWithNullTest {
     @UseDataProvider("dataConstructorInjection")
     @Test
     public <T> void constructorInjection(T sampleValue, String jsonString) throws IOException {
-        MyClassConstructor<T> myClassConstructor = new MyClassConstructor<T>(null);
+        MyClassConstructor<T> myClassConstructor = new MyClassConstructor<>(null);
         assertEquals("{}", objectMapper.writeValueAsString(myClassConstructor));
 
-        MyClassConstructor<T> myClassConstructorWithValue = new MyClassConstructor<T>(ValueWithNull.of(sampleValue));
+        MyClassConstructor<T> myClassConstructorWithValue = new MyClassConstructor<>(ValueWithNull.of(sampleValue));
         assertEquals(String.format("{\"myValue\":%s}", jsonString), objectMapper.writeValueAsString(myClassConstructorWithValue));
 
         assertEquals("{\"myValue\":null}", objectMapper.writeValueAsString(new MyClassConstructor<>(ValueWithNull.explicitNull())));
